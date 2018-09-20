@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+    <head>
+        <title>Bangla Boi</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="js/styles.css" rel="stylesheet" type="text/css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link href="js/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <script src="js/angular.js" type="text/javascript"></script>
+        <script src="js/angular-route.min.js" type="text/javascript"></script>
+        <script src="js/book.js" type="text/javascript"></script>
+    </head>
+    <body ng-controller="RestCtrl">
+        <nav class="navbar navbar bg-primary" >
+            <a style="color:#ffffff">
+                <h1><b>{{title}}</b></h1>
+            </a>
+        </nav>       
+
+        <!--manu bar start-->
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">About US</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><form class="navbar-form navbar-left" action="/action_page.php">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-default " disabled style=" height: 34px" aria-hidden="true"><span class="glyphicon glyphicon-search"></span></button>
+                                <input type="text" class="form-control" placeholder="Search here" ng-model="name">
+
+                            </div>
+
+
+                            <a class="btn btn-default" data-toggle="modal" data-target="#addModal" href="#"
+                               ng-click="">
+                                Add Book
+                            </a> 
+                        </form>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+        <!--manu bar end -->
+
+        <div class="row">
+
+            <div class="col-sm-4 col-md-2 ">
+
+                <div class="panel panel-default" >
+
+                    <div  class="panel-heading">
+                        <h3>Categories</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="list-group" ng-repeat="cat in categories">
+                                <a href="#" class="list-group-item list-group-item-action"> {{cat.category}}</a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-sm-6 offset-sm-2 col-md-10 ">
+                <div class="panel panel-default" >
+
+                    <div  class="panel-heading">
+                        <h3>Latest Books</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div ng-repeat="book in books| filter:name" >
+                                <div class="col-md-6">
+                                    <div class="col-md-6">
+                                        <h2>{{book.name}}</h2>
+                                        <p>{{book.description}}</p>
+                                        <!-- Button trigger modal -->
+                                        <a class="btn btn-primary" data-toggle="modal" data-target="#myModal" href="#"
+                                           ng-click="getbook(book.id)">
+                                            View Details
+                                        </a>                                                                              
+                                    </div>
+                                    <div class="col-md-6">
+                                        <img class="thumbnail" src="{{book.imgLink}}"/>
+                                    </div>
+                                </div>                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content" ng-repeat="b in book">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h2 class="modal-title" style="color: #c9302c">{{b.name}}</h2>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img class="thumbnail" src="{{b.imgLink}}"/>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{b.description}}</p>
+                                <b>Details about of this book:</b><br/>
+
+                                Writer: {{b.writer}}<br/>
+                                Category: {{b.category}}<br/>
+                                Size: {{b.size}}<br/>
+                                length: {{b.length}}<br/>
+                                File Type: {{b.fileType}}<br/><br/>
+
+                                <b>Download this book from below anyone:</b>
+                                <ul>
+                                    <li>Link 1: <a href="{{b.mediaFireLink}}"> Mediafire</a></li>
+                                    <li>Link 2: <a href="{{b.googleDrivrLink}}">Google Drivr</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="addModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h2 class="modal-title">Add New Book</h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">                           
+                            <form class="form-horizontal">
+                                <div class="form-group">
+
+                                    <label class="control-label col-md-2" for="name">Book Name :</label>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" id="name" placeholder="Enter Book Name" name="name" ng-model="book.name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="writer">Writer Name :</label>
+                                    <div class="col-md-4">          
+                                        <input type="text" class="form-control" id="writer" placeholder="Enter Writer Name" name="writer" ng-model="book.writer">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="cat">Category Name :</label>
+                                    <div class="col-md-4">          
+                                        <input type="text" class="form-control" id="cat" placeholder="Enter Category Name" name="cat" ng-model="book.category">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="size">File Size(MB) :</label>
+                                    <div class="col-md-4">          
+                                        <input type="text" class="form-control" id="size" placeholder="Enter File Size" name="size" ng-model="book.size">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="length">File Length(pages) :</label>
+                                    <div class="col-md-4">          
+                                        <input type="text" class="form-control" id="length" placeholder="Enter File Length(pages)" name="length" ng-model="book.length">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="type">File Type :</label>
+                                    <div class="col-md-4">          
+                                        <input type="text" class="form-control" id="type" placeholder="Enter File Type" name="type" ng-model="book.fileType">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="dsc">Description :</label>
+                                    <div class="col-md-4">          
+                                        <textarea  class="form-control" id="dsc" placeholder="Enter Short Description" name="dsc" ng-model="book.description"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="mlink">Download Link1 :</label>
+                                    <div class="col-md-4">          
+                                        <input type="text" class="form-control" id="mlink" placeholder="Enter Download Link1" name="mlink" ng-model="book.mediaFireLink">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="glink">Download Link2 :</label>
+                                    <div class="col-md-4">          
+                                        <input type="text" class="form-control" id="glink" placeholder="Enter Download Link2" name="glink" ng-model="book.googleDrivrLink">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="img">Image Url:</label>
+                                    <div class="col-md-4">          
+                                        <input type="text" class="form-control" id="img" placeholder="Enter Image Url" name="img" ng-model="book.imgLink">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">        
+                                    <div class="col-md-offset-4 col-md-6">
+                                        <button type="submit" class="btn btn-success" ng-click="addBook()">Submit</button>
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <nav class="navbar navbar bg-primary" >
+                <div class="col-md-4">
+                    <h3>Menu</h3>
+                    <ul>
+                        <li><a href="#" style="color:#ffffff">Home</a></li>
+                        <li><a href="#" style="color:#ffffff">Contact</a></li>
+                        <li><a href="#" style="color:#ffffff">About Us</a></li>
+                        <li><a href="#" style="color:#ffffff">All Books</a></li>
+
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h3>Categories</h3>
+                    <ul ng-repeat="c in categories">
+                        <li><a href="#" style="color:#ffffff">{{c.category}}</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h3>Technology Used:</h3>
+                    <ul>
+                        <li><a href="#" style="color:#ffffff">AngularJS</a></li>
+                        <li><a href="#" style="color:#ffffff">Bootstrap</a></li>
+                        <li><a href="#" style="color:#ffffff">Java EE 7</a></li>
+                        <li><a href="#" style="color:#ffffff">JDK 7</a></li>
+                        <li><a href="#" style="color:#ffffff">Apache Tomcat 8.0.27.0</a></li>
+                        <li><a href="#" style="color:#ffffff">MySQL</a></li>
+                    </ul>
+                    <br/>
+                    &copy; Copyright MohammadGalib.info|2018
+                </div>
+            </nav>  
+        </div>
+    </body>
+
+</html>
